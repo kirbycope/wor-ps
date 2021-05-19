@@ -1,0 +1,33 @@
+Download a clean windows 10 on arm image From https://uup.rg-adguard.net/
+Download NTlite From https://www.ntlite.com/download/
+Download 7-Zip From https://www.7-zip.org/download.html
+
+Extract Install.wim from the sources folder inside your windows 10 on arm iso
+Windows10.iso > Sources > Install.wim
+
+Open NTlite Then Load Install.wim
+In NTLite You should see a Presets Tab on the top left , Click on import then load 0.3.1.xml
+On your Right you should see 0.3.1 , Double click it
+Then on your Left click on Registry
+Drag the registry file there
+
+Click on Apply
+
+After its done Right click your Install.wim file and open it with 7-Zip
+after that you can Modify the image directly
+
+[Replace]
+C:\Windows\Web\
+
+[Delete]
+C:\Windows\System32\Recovery
+C:\Windows\System32\BingMaps.dll
+C:\Windows\SysWoW64\OneDriveSetup.exe
+C:\Windows\SysWoW64\BingMaps.dll
+C:\Windows\SysArm32\BingMaps.dll
+C:\Windows\WinSxS\arm64.x86_microsoft-windows-onedrive-setup (Delete this whole folder it usually has a string of random numbers after it)
+C:\Program Files (x86)\Internet Explorer
+C:\Program Files (Arm)\Internet Explorer
+C:\Program Files (Arm)\Windows Defender
+C:\Program Files (Arm)\Windows Mail
+C:\Program Files\Internet Explorer
