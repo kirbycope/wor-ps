@@ -1,4 +1,4 @@
-﻿# Note: Editing the WIM file requires that this srcipt is ran with elevated priviledges (as an Administrator)
+﻿# Note: Editing the WIM file requires that this script is ran with elevated priviledges (as an Administrator)
 
 $startTime = Get-Date
 
@@ -20,8 +20,7 @@ else {
 Write-Host "Running CMD file from UUP..." -ForegroundColor Yellow
 $isoFileName = "21382.1000.210511-1436.CO_RELEASE_SVC_PROD1_CLIENTPRO_OEMRET_A64FRE_EN-US.iso"
 if (-Not (Test-Path -Path "$downloadsFolder\$isoFileName")) {
-    #Invoke-Item "$downloadsFolder\$uupFileName"
-    Start-Process "$downloadsFolder\$uupFileName" -NoNewWindow -Wait
+    cmd /c start "$downloadsFolder\$uupFileName"
     Write-Host "Complete!" -ForegroundColor Green
 }
 else {
@@ -59,7 +58,7 @@ New-Item -ItemType Directory -Force -Path "$downloadsFolder\wim" > null
 Mount-WindowsImage -Path "$downloadsFolder\wim" -ImagePath "$downloadsFolder\Install.wim" -Index $imageIndex > null
 Write-Host "Complete!" -ForegroundColor Green
 
-Write-Host "Disabling optional features..." -ForegroundColor Yellow
+Write-Host "Disabling Optional Features..." -ForegroundColor Yellow
 # Get a list of optional Windows features
 #Get-WindowsOptionalFeature -Path "$downloadsFolder\wim" | FT -AutoSize
 $featuresToDisable = @(
@@ -106,7 +105,7 @@ foreach ($appName in $appsToRemove) {
 Write-Host "Complete!" -ForegroundColor Green
 
 Write-Host "Saving WIM file..." -ForegroundColor Yellow
-Dismount-WindowsImage -Path "$downloadsFolder\wim" -save -Verbose
+Dismount-WindowsImage -Path "$downloadsFolder\wim" -save > null
 Remove-Item "$downloadsFolder\wim" -Force > null
 Write-Host "Complete!" -ForegroundColor Green
 
