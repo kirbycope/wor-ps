@@ -23,7 +23,7 @@ else {
 
 Write-Host "Mounting the ISO..." -ForegroundColor Yellow
 $driveLetter = (Get-DiskImage -ImagePath "$downloadsFolder\$isoFileName" | Get-Volume).DriveLetter
-if (-Not $driveLetter){
+if (-Not $driveLetter) {
     $mountResult = Mount-DiskImage -ImagePath "$downloadsFolder\$isoFileName" -PassThru
     $driveLetter = ($mountResult | Get-Volume).DriveLetter
     Write-Host "Mounted to $driveLetter drive!" -ForegroundColor Green
@@ -35,6 +35,7 @@ else {
 Write-Host "Extracting WIM file..." -ForegroundColor Yellow
 if (-Not (Test-Path -Path "$downloadsFolder\Install.wim")) {
     Copy-Item "${driveLetter}:\Sources\Install.wim" -Destination "$downloadsFolder\Install.wim"
+    Set-ItemProperty "$downloadsFolder\Install.wim" -name IsReadOnly -value $false
     Write-Host "Complete!" -ForegroundColor Green
 }
 else {
@@ -45,17 +46,59 @@ Write-Host "Dismounting the ISO..." -ForegroundColor Yellow
 $dismountResult = Dismount-DiskImage -ImagePath "$downloadsFolder\$isoFileName"
 Write-Host "Complete!" -ForegroundColor Green
 
-Write-Host "Downloading NTLite..." -ForegroundColor Yellow
-$ntLiteFileName = "NTLite_setup_x64.exe"
-$ntLiteDownloadUrl = "https://downloads.ntlite.com/files/NTLite_setup_x64.exe"
-if (-Not (Test-Path -Path "$downloadsFolder\$ntLiteFileName")) {
-    Invoke-WebRequest $ntLiteDownloadUrl -OutFile "$downloadsFolder\$ntLiteFileName"
-    Write-Host "Complete!" -ForegroundColor Green
-}
-else {
-    Write-Host "NTLite file already exists!" -ForegroundColor Green
-}
+Write-Host "Mounting the WIM..." -ForegroundColor Yellow
+$imageIndex = (Get-WindowsImage -ImagePath "$downloadsFolder\Install.wim" | ? { $_.ImageName -like "Windows 10 Pro" }).ImageIndex
+New-Item -ItemType Directory -Force -Path "$downloadsFolder\wim" > null
+Mount-WindowsImage -Path "$downloadsFolder\wim" -ImagePath "$downloadsFolder\Install.wim" -Index $imageIndex
+Write-Host "Complete!" -ForegroundColor Green
 
-# todo get the preset
-# Note, NTLite doesn't have a silent install?
-# "C:\Program Files\NTLite\NTLite.exe"
+Write-Host "Disabling optional features..." -ForegroundColor Yellow
+# Get a list of optional Windows features
+#Get-WindowsOptionalFeature -Path "$downloadsFolder\wim" | FT -AutoSize
+$featuresToDisable = @(
+    "WindowsMediaPlayer"
+)
+foreach ($featureName in $featuresToDisable) {
+    Disable-WindowsOptionalFeature -Path "$downloadsFolder\wim" -FeatureName $featureName > null
+}
+Write-Host "Complete!" -ForegroundColor Green
+
+Write-Host "Removing Provisioned Applications..." -ForegroundColor Yellow
+# Get a list of povisioned apps
+#Get-AppxProvisionedPackage -Path "$downloadsFolder\wim" | select Displayname | ft -AutoSize
+$appsToRemove = @(
+    "Microsoft.BingNews",
+    "Microsoft.BingWeather",
+    "Microsoft.MicrosoftOfficeHub",
+    "Microsoft.MicrosoftSolitaireCollection",
+    "Microsoft.MicrosoftStickyNotes",
+    "Microsoft.People",
+    "Microsoft.ScreenSketch",
+    "Microsoft.SecHealthUI",
+    "Microsoft.SkypeApp",
+    "Microsoft.StorePurchaseApp",
+    "Microsoft.Todos",
+    "Microsoft.Windows.Photos",
+    "Microsoft.WindowsAlarms",
+    "Microsoft.WindowsCamera",
+    "microsoft.windowscommunicationsapps",
+    "Microsoft.WindowsFeedbackHub",
+    "Microsoft.WindowsMaps",
+    "Microsoft.Xbox.TCUI",
+    "Microsoft.XboxGameOverlay",
+    "Microsoft.XboxGamingOverlay",
+    "Microsoft.XboxIdentityProvider",
+    "Microsoft.XboxSpeechToTextOverlay",
+    "Microsoft.YourPhone",
+    "Microsoft.ZuneMusic",
+    "Microsoft.ZuneVideo"	
+)
+foreach ($appName in $appsToRemove) {
+    Get-AppxProvisionedPackage -Path "$downloadsFolder\wim" | ? { $_.DisplayName -like $appName } | Remove-AppxProvisionedPackage -Path "$downloadsFolder\wim" > null
+}
+Write-Host "Complete!" -ForegroundColor Green
+
+Write-Host "Saving WIM file..." -ForegroundColor Yellow
+Dismount-WindowsImage -Path "$downloadsFolder\wim" -save -Verbose
+Remove-Item "$downloadsFolder\wim" -Force > null
+Write-Host "Complete!" -ForegroundColor Green
