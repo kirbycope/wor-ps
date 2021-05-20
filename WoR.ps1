@@ -1,4 +1,6 @@
-﻿$downloadsFolder = "$HOME\Downloads"
+﻿# Note: Editing the WIM file requires that this srcipt is ran with elevated priviledges (as an Amdministrator)
+
+$downloadsFolder = "$HOME\Downloads"
 
 Write-Host "Downloading CMD file from UUP..." -ForegroundColor Yellow
 $uupFileName = "creatingISO_21382.1000_en-us_arm64_professional.cmd"
@@ -43,7 +45,7 @@ else {
 }
 
 Write-Host "Dismounting the ISO..." -ForegroundColor Yellow
-$dismountResult = Dismount-DiskImage -ImagePath "$downloadsFolder\$isoFileName"
+Dismount-DiskImage -ImagePath "$downloadsFolder\$isoFileName" > null
 Write-Host "Complete!" -ForegroundColor Green
 
 Write-Host "Mounting the WIM..." -ForegroundColor Yellow
