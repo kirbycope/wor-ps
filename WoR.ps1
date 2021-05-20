@@ -1,4 +1,4 @@
-﻿# Note: Editing the WIM file requires that this srcipt is ran with elevated priviledges (as an Amdministrator)
+﻿# Note: Editing the WIM file requires that this srcipt is ran with elevated priviledges (as an Administrator)
 
 $downloadsFolder = "$HOME\Downloads"
 
@@ -51,7 +51,7 @@ Write-Host "Complete!" -ForegroundColor Green
 Write-Host "Mounting the WIM..." -ForegroundColor Yellow
 $imageIndex = (Get-WindowsImage -ImagePath "$downloadsFolder\Install.wim" | ? { $_.ImageName -like "Windows 10 Pro" }).ImageIndex
 New-Item -ItemType Directory -Force -Path "$downloadsFolder\wim" > null
-Mount-WindowsImage -Path "$downloadsFolder\wim" -ImagePath "$downloadsFolder\Install.wim" -Index $imageIndex
+Mount-WindowsImage -Path "$downloadsFolder\wim" -ImagePath "$downloadsFolder\Install.wim" -Index $imageIndex > null
 Write-Host "Complete!" -ForegroundColor Green
 
 Write-Host "Disabling optional features..." -ForegroundColor Yellow
