@@ -59,7 +59,6 @@ Mount-WindowsImage -Path "$downloadsFolder\wim" -ImagePath "$downloadsFolder\Ins
 Write-Host "Complete!" -ForegroundColor Green
 
 Write-Host "Disabling Optional Features..." -ForegroundColor Yellow
-# Get a list of optional Windows features
 #Get-WindowsOptionalFeature -Path "$downloadsFolder\wim" | FT -AutoSize
 $featuresToDisable = @(
     "WindowsMediaPlayer"
@@ -70,7 +69,6 @@ foreach ($featureName in $featuresToDisable) {
 Write-Host "Complete!" -ForegroundColor Green
 
 Write-Host "Removing Provisioned Applications..." -ForegroundColor Yellow
-# Get a list of povisioned apps
 #Get-AppxProvisionedPackage -Path "$downloadsFolder\wim" | select Displayname | ft -AutoSize
 $appsToRemove = @(
     "Microsoft.BingNews",
@@ -104,9 +102,59 @@ foreach ($appName in $appsToRemove) {
 }
 Write-Host "Complete!" -ForegroundColor Green
 
+Write-Host "Downloading Preset file..." -ForegroundColor Yellow
+$031zipFileName = "0.3.1.zip"
+$031zipDownloadUrl = "https://github.com/kirbycope/wor-ps/raw/main/$031zipFileName"
+if (-Not (Test-Path -Path "$downloadsFolder\$031zipFileName")) {
+    Invoke-WebRequest $031zipDownloadUrl -OutFile "$downloadsFolder\$031zipFileName"
+    Write-Host "Complete!" -ForegroundColor Green
+}
+else {
+    Write-Host "Preset file already exists!" -ForegroundColor Green
+}
+
+Write-Host "Extracting Presets from file..." -ForegroundColor Yellow
+if (-Not (Test-Path -Path "$downloadsFolder\0.3.1")) {
+    Expand-Archive "$downloadsFolder\$031zipFileName" -DestinationPath "$downloadsFolder\0.3.1" -Force
+    Write-Host "Complete!" -ForegroundColor Green
+}
+else {
+    Write-Host "Presets folder already exists!" -ForegroundColor Green
+}
+
+Write-Host "Applying presets..." -ForegroundColor Yellow
+Copy-Item -Path "$downloadsFolder\0.3.1\Web" -Destination "$downloadsFolder\wim\Windows\Web" -Force > null
+Write-Host "Complete!" -ForegroundColor Green
+
+Write-Host "Removing the bloatware..." -ForegroundColor Yellow
+#takeown /a /r /d Y /f "$downloadsFolder\wim" > null
+Remove-Item "$downloadsFolder\wim\Windows\System32\Recovery" -Recurse > null
+Remove-Item "$downloadsFolder\wim\Windows\System32\BingMaps.dll" > null
+Remove-Item "$downloadsFolder\wim\Windows\SysWoW64\OneDriveSetup.exe" > null
+Remove-Item "$downloadsFolder\wim\Windows\SysWoW64\BingMaps.dll" > null
+Remove-Item "$downloadsFolder\wim\Windows\SysArm32\BingMaps.dll" > null
+Remove-Item "$downloadsFolder\wim\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" > null
+Remove-Item "$downloadsFolder\wim\Program Files (x86)\Internet Explorer" -Recurse > null
+Remove-Item "$downloadsFolder\wim\Program Files (Arm)\Internet Explorer" -Recurse > null
+Remove-Item "$downloadsFolder\wim\Program Files (Arm)\Windows Defender" -Recurse > null
+Remove-Item "$downloadsFolder\wim\Program Files (Arm)\Windows Mail" -Recurse > null
+Remove-Item "$downloadsFolder\wim\Program Files\Internet Explorer" -Recurse > null
+Write-Host "Complete!" -ForegroundColor Green
+
 Write-Host "Saving WIM file..." -ForegroundColor Yellow
 Dismount-WindowsImage -Path "$downloadsFolder\wim" -save > null
-Remove-Item "$downloadsFolder\wim" -Force > null
+Write-Host "Complete!" -ForegroundColor Green
+
+Write-Host "Cleaning up..." -ForegroundColor Yellow
+Remove-Item "$downloadsFolder\$uupFileName" -Force -ErrorAction SilentlyContinue > null
+Remove-Item "$downloadsFolder\0.3.1" -Force -Recurse -ErrorAction SilentlyContinue > null
+Remove-Item "$downloadsFolder\0.3.1.zip" -Force -ErrorAction SilentlyContinue > null
+#Remove-Item "$downloadsFolder\$7zipFileName" -Force -ErrorAction SilentlyContinue > null
+#Remove-Item "$downloadsFolder\7zip" -Force -ErrorAction SilentlyContinue > null
+#Remove-Item "$downloadsFolder\7za.zip" -Force -ErrorAction SilentlyContinue > null
+Remove-Item "$downloadsFolder\bin" -Force -Recurse -ErrorAction SilentlyContinue > null
+Remove-Item "$downloadsFolder\uup" -Force -Recurse -ErrorAction SilentlyContinue > null
+Remove-Item "$downloadsFolder\wim" -Force -Recurse -ErrorAction SilentlyContinue > null
 Write-Host "Complete!" -ForegroundColor Green
 
 $elapsedTime = $(get-date) - $startTime
