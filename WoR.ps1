@@ -1,5 +1,7 @@
 ﻿# Note: Editing the WIM file requires that this srcipt is ran with elevated priviledges (as an Administrator)
 
+$startTime = Get-Date
+
 $downloadsFolder = "$HOME\Downloads"
 
 Write-Host "Downloading CMD file from UUP..." -ForegroundColor Yellow
@@ -16,7 +18,8 @@ else {
 Write-Host "Running CMD file from UUP..." -ForegroundColor Yellow
 $isoFileName = "21382.1000.210511-1436.CO_RELEASE_SVC_PROD1_CLIENTPRO_OEMRET_A64FRE_EN-US.iso"
 if (-Not (Test-Path -Path "$downloadsFolder\$isoFileName")) {
-    Invoke-Item "$downloadsFolder\$uupFileName"
+    #Invoke-Item "$downloadsFolder\$uupFileName"
+    Start-Process "$downloadsFolder\$uupFileName" -NoNewWindow -Wait
     Write-Host "Complete!" -ForegroundColor Green
 }
 else {
@@ -104,3 +107,6 @@ Write-Host "Saving WIM file..." -ForegroundColor Yellow
 Dismount-WindowsImage -Path "$downloadsFolder\wim" -save -Verbose
 Remove-Item "$downloadsFolder\wim" -Force > null
 Write-Host "Complete!" -ForegroundColor Green
+
+$elapsedTime = $(get-date) - $startTime
+"Total Process Time was " + "{0:HH:mm:ss}" -f ([datetime]$elapsedTime.Ticks)
