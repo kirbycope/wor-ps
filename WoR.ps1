@@ -15,6 +15,8 @@ else {
     Write-Host "CMD file already exists!" -ForegroundColor Green
 }
 
+## TODO: Edit file so it doesnt wait to close
+
 Write-Host "Running CMD file from UUP..." -ForegroundColor Yellow
 $isoFileName = "21382.1000.210511-1436.CO_RELEASE_SVC_PROD1_CLIENTPRO_OEMRET_A64FRE_EN-US.iso"
 if (-Not (Test-Path -Path "$downloadsFolder\$isoFileName")) {
