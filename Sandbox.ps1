@@ -1,6 +1,6 @@
 ﻿$downloadsFolder = "$HOME\Downloads"
 
-Write-Host "Installing 7-Zip ..." -ForegroundColor Yellow
+Write-Host "Downloading 7-Zip ..." -ForegroundColor Yellow
 $7zipFileName = "7z1900-x64.exe"
 $7zipDownloadUrl = "https://www.7-zip.org/a/$7zipFileName"
 if (-Not(Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | ?{$_.DisplayName -like "8-Zip*"})){
