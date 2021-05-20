@@ -146,12 +146,12 @@ Dismount-WindowsImage -Path "$downloadsFolder\wim" -save > null
 Write-Host "Complete!" -ForegroundColor Green
 
 Write-Host "Cleaning up..." -ForegroundColor Yellow
-Remove-Item "$downloadsFolder\$uupFileName" -Force -ErrorAction SilentlyContinue > null
-Remove-Item "$downloadsFolder\0.3.1" -Force -Recurse -ErrorAction SilentlyContinue > null
-Remove-Item "$downloadsFolder\0.3.1.zip" -Force -ErrorAction SilentlyContinue > null
-Remove-Item "$downloadsFolder\bin" -Force -Recurse -ErrorAction SilentlyContinue > null
-Remove-Item "$downloadsFolder\uup" -Force -Recurse -ErrorAction SilentlyContinue > null
-Remove-Item "$downloadsFolder\wim" -Force -Recurse -ErrorAction SilentlyContinue > null
+Remove-Item "$downloadsFolder\$uupFileName" -Force -ErrorAction SilentlyContinue
+Remove-Item "$downloadsFolder\0.3.1" -Force -Recurse -ErrorAction SilentlyContinue
+Remove-Item "$downloadsFolder\0.3.1.zip" -Force -ErrorAction SilentlyContinue
+Remove-Item "$downloadsFolder\bin" -Force -Recurse -ErrorAction SilentlyContinue
+Remove-Item "$downloadsFolder\uup" -Force -Recurse -ErrorAction SilentlyContinue
+Remove-Item "$downloadsFolder\wim" -Force -Recurse -ErrorAction SilentlyContinue
 Write-Host "Complete!" -ForegroundColor Green
 
 $elapsedTime = $(get-date) - $startTime
