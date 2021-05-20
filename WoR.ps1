@@ -149,9 +149,6 @@ Write-Host "Cleaning up..." -ForegroundColor Yellow
 Remove-Item "$downloadsFolder\$uupFileName" -Force -ErrorAction SilentlyContinue > null
 Remove-Item "$downloadsFolder\0.3.1" -Force -Recurse -ErrorAction SilentlyContinue > null
 Remove-Item "$downloadsFolder\0.3.1.zip" -Force -ErrorAction SilentlyContinue > null
-#Remove-Item "$downloadsFolder\$7zipFileName" -Force -ErrorAction SilentlyContinue > null
-#Remove-Item "$downloadsFolder\7zip" -Force -ErrorAction SilentlyContinue > null
-#Remove-Item "$downloadsFolder\7za.zip" -Force -ErrorAction SilentlyContinue > null
 Remove-Item "$downloadsFolder\bin" -Force -Recurse -ErrorAction SilentlyContinue > null
 Remove-Item "$downloadsFolder\uup" -Force -Recurse -ErrorAction SilentlyContinue > null
 Remove-Item "$downloadsFolder\wim" -Force -Recurse -ErrorAction SilentlyContinue > null

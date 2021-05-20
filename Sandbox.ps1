@@ -14,3 +14,7 @@ $7zipDownloadUrl = "https://github.com/kirbycope/wor-ps/raw/main/$7zipFileName"
 Invoke-WebRequest $7zipDownloadUrl -OutFile "$downloadsFolder\$7zipFileName"
 Expand-Archive "$downloadsFolder\$7zipFileName" -DestinationPath "$downloadsFolder\7zip" -Force
 Write-Host "Complete!" -ForegroundColor Green
+
+#Remove-Item "$downloadsFolder\$7zipFileName" -Force -ErrorAction SilentlyContinue > null
+#Remove-Item "$downloadsFolder\7zip" -Force -ErrorAction SilentlyContinue > null
+#Remove-Item "$downloadsFolder\7za.zip" -Force -ErrorAction SilentlyContinue > null
