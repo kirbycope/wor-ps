@@ -127,13 +127,13 @@ Copy-Item -Path "$downloadsFolder\0.3.1\Web" -Destination "$downloadsFolder\wim\
 Write-Host "Complete!" -ForegroundColor Green
 
 Write-Host "Removing the bloatware..." -ForegroundColor Yellow
-#takeown /a /r /d Y /f "$downloadsFolder\wim" > null
+takeown /a /r /d Y /f "$downloadsFolder\wim" > null
 Remove-Item "$downloadsFolder\wim\Windows\System32\Recovery" -Recurse
 Remove-Item "$downloadsFolder\wim\Windows\System32\BingMaps.dll"
 Remove-Item "$downloadsFolder\wim\Windows\SysWoW64\OneDriveSetup.exe"
 Remove-Item "$downloadsFolder\wim\Windows\SysWoW64\BingMaps.dll"
 Remove-Item "$downloadsFolder\wim\Windows\SysArm32\BingMaps.dll"
-Remove-Item "$downloadsFolder\wim\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" > null
+Remove-Item "$downloadsFolder\wim\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk"
 Remove-Item "$downloadsFolder\wim\Program Files (x86)\Internet Explorer" -Recurse
 Remove-Item "$downloadsFolder\wim\Program Files (Arm)\Internet Explorer" -Recurse
 Remove-Item "$downloadsFolder\wim\Program Files (Arm)\Windows Defender" -Recurse
